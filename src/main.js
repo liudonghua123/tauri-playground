@@ -1,18 +1,33 @@
-const { invoke } = window.__TAURI__.core;
 
-let greetInputEl;
-let greetMsgEl;
+const executeButton = document.getElementById('execute');
+const outputTextArea = document.getElementById('output');
 
-async function greet() {
-  // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-  greetMsgEl.textContent = await invoke("greet", { name: greetInputEl.value });
-}
+executeButton.addEventListener('click', async () => {
+  const code = document.getElementById('code').value;
+  outputTextArea.value = ''; // Clear output
 
-window.addEventListener("DOMContentLoaded", () => {
-  greetInputEl = document.querySelector("#greet-input");
-  greetMsgEl = document.querySelector("#greet-msg");
-  document.querySelector("#greet-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    greet();
-  });
+  try {
+    // Remove any previous <script> tags that were added dynamically
+    const oldScript = document.getElementById('dynamicScript');
+    if (oldScript) {
+      oldScript.remove();
+    }
+
+    // Create a new <script> tag to execute the user code
+    const script = document.createElement('script');
+    script.id = 'dynamicScript';
+    script.type = 'module'; // Ensure the module scope if needed
+    script.innerHTML = `
+      import { fetch } from '@tauri-apps/plugin-http';
+      
+      ${code}
+    `;
+    
+    // Append the <script> to the body
+    document.body.appendChild(script);
+
+    outputTextArea.value = 'Code executed successfully, see the details on the console of DevTools!';
+  } catch (error) {
+    outputTextArea.value = `Error: ${error.message}`;
+  }
 });
