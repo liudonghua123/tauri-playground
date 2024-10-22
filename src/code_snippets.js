@@ -39,5 +39,23 @@ if (permissionGranted) {
   sendNotification({ title: 'Tauri', body: 'Tauri is awesome!' });
 }
   `
+  },
+  dialog: {
+    title: 'Dialog by @tauri-apps/plugin-dialog',
+    link: 'https://tauri.app/plugin/dialog/',
+    code: `
+import { ask } from '@tauri-apps/plugin-dialog';
+// when using ';"withGlobalTauri": true';, you may use
+// const { ask } = window.__TAURI__.dialog;
+
+// Create a Yes/No dialog
+const answer = await ask('This action cannot be reverted. Are you sure?', {
+  title: 'Tauri',
+  kind: 'warning',
+});
+
+console.log(answer);
+// Prints boolean to the console
+`
   }
 }
