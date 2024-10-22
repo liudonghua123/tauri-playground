@@ -1,8 +1,11 @@
 console.info(`running main.js`);
 
+import { codeSnippets } from './code_snippets.js';
+
 const editor = document.getElementById('editor')
 const executeButton = document.getElementById('execute');
 const outputTextArea = document.getElementById('output');
+const demoSelect = document.getElementById('demo-select');
 
 // Function to redirect console methods
 const redirectConsoleOutput = () => {
@@ -22,6 +25,20 @@ const redirectConsoleOutput = () => {
   console.info = (...args) => logToOutput('info', args);
   console.warn = (...args) => logToOutput('warn', args);
   console.error = (...args) => logToOutput('error', args);
+};
+
+// init demoSelect options
+for (const key in codeSnippets) {
+  const option = document.createElement('option');
+  option.value = key;
+  option.text = codeSnippets[key].title;
+  demoSelect.appendChild(option);
+}
+
+// Function to load demo code into the editor
+const loadDemoCode = (demo) => {
+  const code = codeSnippets[demo].code;
+  editor.value = code;
 };
 
 // Set up the Execute button click handler
@@ -54,3 +71,11 @@ executeButton.addEventListener('click', async () => {
     outputTextArea.value = `Error: ${error.message}`;
   }
 });
+
+// Set up the demo select change handler
+demoSelect.addEventListener('change', (event) => {
+  loadDemoCode(event.target.value);
+});
+
+// Load the initial demo code
+loadDemoCode(demoSelect.value);

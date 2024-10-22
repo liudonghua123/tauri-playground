@@ -1,0 +1,43 @@
+export const codeSnippets = {
+  http: {
+    title: 'HTTP Client by @tauri-apps/plugin-http',
+    link: 'https://tauri.app/plugin/http-client/',
+    code: `
+import { fetch } from '@tauri-apps/plugin-http';
+
+// Send a GET request
+const response = await fetch('http://test.tauri.app/data.json', {
+  method: 'GET',
+});
+console.log(response.status); // e.g. 200
+console.log(response.statusText); // e.g. "OK"
+  `
+  },
+  notification: {
+    title: 'Notifications by @tauri-apps/plugin-notification',
+    link: 'https://tauri.app/plugin/notification/',
+    code: `
+import {
+  isPermissionGranted,
+  requestPermission,
+  sendNotification,
+} from '@tauri-apps/plugin-notification';
+// when using '"withGlobalTauri": true', you may use
+// const { isPermissionGranted, requestPermission, sendNotification, } = window.__TAURI__.notification;
+
+// Do you have permission to send a notification?
+let permissionGranted = await isPermissionGranted();
+
+// If not we need to request it
+if (!permissionGranted) {
+  const permission = await requestPermission();
+  permissionGranted = permission === 'granted';
+}
+
+// Once permission has been granted we can send the notification
+if (permissionGranted) {
+  sendNotification({ title: 'Tauri', body: 'Tauri is awesome!' });
+}
+  `
+  }
+}
